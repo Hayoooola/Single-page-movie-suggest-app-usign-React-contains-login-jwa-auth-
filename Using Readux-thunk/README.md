@@ -29,4 +29,5 @@ You can login/register with the following data
 }
 ```
 also you can register first then login by your personal username & password.
+** after sign-up you must re-run the server to access new username & password! (use $npm run start-auth)
 

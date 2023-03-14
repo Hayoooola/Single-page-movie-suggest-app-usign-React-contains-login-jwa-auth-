@@ -20,6 +20,7 @@ const EditComponent = ({ movieObj }) => {
 
     const editHandler = (title, summery, rating, year, url) => {
         dispatch(editSelectedMovieRequest(movieObj, title, summery, rating, year, url));
+        closeHandler();
     };
 
     return (

@@ -20,10 +20,11 @@ const AddNewMovieButton = () => {
 
     const submitHandler = (title, summery, rating, year, url) => {
         dispatch(addNewMovie(title, summery, rating, year, url));
+        closeHandler();
     };
 
     return (
-        <span style={{ position: "absolute", right: "3rem", bottom: "3rem" }}>
+        <span style={{ position: "fixed", right: "3rem", bottom: "3rem" }}>
             <Fab className='m-1' aria-label="edit" onClick={openHandler} color="primary">
                 <AddIcon />
             </Fab>
