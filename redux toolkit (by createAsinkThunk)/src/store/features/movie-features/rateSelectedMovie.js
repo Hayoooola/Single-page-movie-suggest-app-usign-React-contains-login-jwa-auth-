@@ -1,7 +1,6 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
 
-import { fetchAllMovies } from "./fetch-all-movies";
 import { checkLoginStatus } from "../auth-features/checkLoginStatus";
 
 // action

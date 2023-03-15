@@ -12,6 +12,7 @@ import Logo from "../../assets/images/hayoola-logo.png";
 
 import styles from "./navbar.module.css";
 import { logOutRequest } from '../../store/features/auth-features/logOut';
+import { checkLoginStatus } from '../../store/features/auth-features/checkLoginStatus';
 
 export default function NavBar() {
     const [anchorEl, setAnchorEl] = React.useState(null);
@@ -26,7 +27,8 @@ export default function NavBar() {
     };
     const logOut = () => {
         closeUserMenu();
-        dispatch(logOutRequest());
+        logOutRequest();
+        dispatch(checkLoginStatus());
     };
 
     const userName = JSON.parse(localStorage.getItem("email"));

@@ -1,9 +1,6 @@
-import { createAction } from "@reduxjs/toolkit";
 import { toast } from "react-toastify";
 
-
-export const logOutRequest = createAction("logOut", () => {
-
+export const logOutRequest = () => {
     // show logOut toast
     toast.error('ReLogin require!', {
         position: "top-center",
@@ -15,14 +12,9 @@ export const logOutRequest = createAction("logOut", () => {
         progress: undefined,
         theme: "light",
     });
-    // redirect user to login page after closing toast
-    setTimeout(() => {
-        localStorage.removeItem("token");
-        localStorage.removeItem("iat");
-        localStorage.removeItem("exp");
-        localStorage.removeItem("email");
-        window.location.href = "/login";
-    }, 3000);
 
-    return { type: "logOut" };
-});
+    localStorage.removeItem("token");
+    localStorage.removeItem("iat");
+    localStorage.removeItem("exp");
+    localStorage.removeItem("email");
+};

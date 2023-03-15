@@ -12,7 +12,6 @@ import { findRating } from "../../components/movie-action-components/rate-compon
 import DeleteComponent from '../../components/movie-action-components/delete';
 import MovieDetail from '../../components/movie-action-components/movie-detail';
 import EditComponent from '../../components/movie-action-components/edit';
-import { useEffect, useState } from 'react';
 
 export const SingleMovie = ({ movieObj }) => {
     // calculate movie rating
