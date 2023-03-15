@@ -7,7 +7,7 @@ import { toast } from 'react-toastify';
 import "./login.css";
 
 import { loginRequest } from '../../store/features/auth-features/loginRequest';
-import { firstTimeVisitingPageRequest } from '../../store/features/auth-features/isUserFirstTimeVisitPage';
+import { visitPage } from '../../store/features/auth-features/isUserFirstTimeVisitPage';
 import { SubmitButton } from '../../components/submitButton';
 import Loading from "../../components/loading/loading";
 import logo from "../../assets/images/hayoola-logo.png";
@@ -31,7 +31,7 @@ export const LoginPage = () => {
     // manage submitting login requests
     useEffect(() => {
         if (loginData.authData.access_token && !isUserLoginBefore) {
-            dispatch(firstTimeVisitingPageRequest());
+            dispatch(visitPage());
             navigate("/");
             // showing success toast
             toast.success('Login successful', {

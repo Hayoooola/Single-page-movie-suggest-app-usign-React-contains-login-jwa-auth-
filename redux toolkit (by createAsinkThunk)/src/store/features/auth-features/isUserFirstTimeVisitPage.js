@@ -1,13 +1,14 @@
-import { createAction, createReducer } from "@reduxjs/toolkit";
+import { createSlice } from "@reduxjs/toolkit";
 
-export const firstTimeVisitingPageRequest = createAction("firstTimeVisit", () => {
-    return { payload: true };
+const firstTimeVisitingPage = createSlice({
+    name: "firstTimeVisitingPage",
+    initialState: { isUserFirstTimeVisit: false },
+    reducers: {
+        visitPage: () => {
+            return { isUserFirstTimeVisit: true };
+        }
+    }
 });
 
-const firstTimeVisitingPageReducer = createReducer({ isUserFirstTimeVisit: false }, (builder) => {
-    builder.addCase("firstTimeVisit", (state, action) => {
-        return action.payload ? { isUserFirstTimeVisit: true } : { isUserFirstTimeVisit: true };
-    });
-});
-
-export default firstTimeVisitingPageReducer;
+export const { visitPage } = firstTimeVisitingPage.actions;
+export default firstTimeVisitingPage.reducer;
