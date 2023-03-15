@@ -1,0 +1,10 @@
+.menu_items a{ 
+    color: #fff !important;
+    text-decoration: none;
+    padding: 0 1rem;
+}
+
+.menu_username{
+    font-size: 16px;
+    padding: 0 .5rem;
+}
