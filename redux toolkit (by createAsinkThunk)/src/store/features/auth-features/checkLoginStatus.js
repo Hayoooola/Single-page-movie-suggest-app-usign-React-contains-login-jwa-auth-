@@ -1,16 +1,5 @@
-const { createAction, createReducer } = require("@reduxjs/toolkit");
+const { createSlice } = require("@reduxjs/toolkit");
 
-// action
-export const checkLoginStatus = createAction("checkLoginStatus", () => {
-    const token = JSON.parse(localStorage.getItem("token")) || null;
-    const exp = JSON.parse(localStorage.getItem("exp")) || null;
-
-    const expiredTime = checkTokenValidity(exp);
-
-    return (expiredTime && token) ? { payload: token } : { payload: false };
-});
-
-// checking validity of token
 const checkTokenValidity = (expTime) => {
     const expiredTime = new Date(expTime * 1000).getTime() - new Date().getTime();
     if (expiredTime > 0 && expiredTime <= 3600000) {
@@ -20,13 +9,20 @@ const checkTokenValidity = (expTime) => {
     }
 };
 
-// reducer
-const initialLoginStatusState = { isUserLogin: false, token: null };
-const loginStatusReducer = createReducer(initialLoginStatusState, builder =>
-    builder.addCase("checkLoginStatus", (state, action) => {
-        return action.payload ? { isUserLogin: true, token: action.payload } : { isUserLogin: false, token: null };
-    })
-);
+const checkStatus = createSlice({
+    name: "checkStatus",
+    initialState: { isUserLogin: false, token: null },
+    reducers: {
+        checkLoginStatus: () => {
+            const token = JSON.parse(localStorage.getItem("token")) || null;
+            const exp = JSON.parse(localStorage.getItem("exp")) || null;
 
+            const expiredTime = checkTokenValidity(exp);
 
-export default loginStatusReducer;
+            return (expiredTime && token) ? { isUserLogin: true, token: token } : { isUserLogin: false, token: null };
+        }
+    }
+});
+
+export const { checkLoginStatus } = checkStatus.actions;
+export default checkStatus.reducer;
