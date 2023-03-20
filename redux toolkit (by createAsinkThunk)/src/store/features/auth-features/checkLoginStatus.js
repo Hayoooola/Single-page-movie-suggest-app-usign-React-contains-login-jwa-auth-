@@ -19,7 +19,7 @@ const checkStatus = createSlice({
 
             const expiredTime = checkTokenValidity(exp);
 
-            return (expiredTime && token) ? { isUserLogin: true, token: token } : { isUserLogin: false, token: null };
+            return (expiredTime && token) ? { isUserLogin: true, token: null } : { isUserLogin: false, token: null };
         }
     }
 });
