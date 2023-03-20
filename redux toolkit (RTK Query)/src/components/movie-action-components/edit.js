@@ -1,14 +1,14 @@
 import * as React from 'react';
-import { useDispatch } from 'react-redux';
 import Fab from '@mui/material/Fab';
 import EditIcon from '@mui/icons-material/Edit';
 
 import MovieModal from './modal-form/movieInputs';
-import { editMovieRequest } from '../../store/features/movie-features/edit-selected-movie';
+import { useEditMovieMutation } from '../../API/movieApi';
 
 const EditComponent = ({ movieObj }) => {
     const [open, setOpen] = React.useState(false);
-    const dispatch = useDispatch();
+
+    const [editMovie] = useEditMovieMutation();
 
     const openHandler = () => {
         setOpen(true);
@@ -19,7 +19,7 @@ const EditComponent = ({ movieObj }) => {
     };
 
     const editHandler = (title, summery, rating, year, url) => {
-        dispatch(editMovieRequest({ movieObj, title, summery, rating, year, url }));
+        editMovie({ movieObj, title, summery, rating, year, url });
         closeHandler();
     };
 

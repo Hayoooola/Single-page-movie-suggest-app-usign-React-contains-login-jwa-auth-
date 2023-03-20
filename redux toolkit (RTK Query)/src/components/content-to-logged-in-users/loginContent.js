@@ -2,17 +2,20 @@ import { useDispatch, useSelector } from "react-redux";
 
 import logo from "../../assets/images/hayoola-logo.png";
 import { SubmitButton } from '../submitButton';
-import { logOutRequest } from "../../store/features/auth-features/logOut";
+import { logOutRequest } from "../../features/auth-features/logOut";
+import { checkLoginStatus } from "../../features/auth-features/checkLoginStatus";
+import { visitAlready } from "../../features/auth-features/isUserFirstTimeVisitPage";
 
 export const LoggedInUsers = () => {
     const dispatch = useDispatch();
 
     const userEmail = JSON.parse(localStorage.getItem("email"));
-    const submitBtnLoading = useSelector(store => store.loginData.loading);
 
 
     const logout = () => {
-        dispatch(logOutRequest());
+        logOutRequest();
+        dispatch(checkLoginStatus());
+        dispatch(visitAlready());
     };
 
     return (
@@ -38,7 +41,6 @@ export const LoggedInUsers = () => {
                                             </p>
                                             <p className='text-secondary fw-light d-flex flex-wrap justify-content-around align-items-center'>you're not {userEmail}?
                                                 <SubmitButton
-                                                    loading={submitBtnLoading}
                                                     customClassName="btn-outline-none gradient-custom-2"
                                                     buttonText="Log out"
                                                     onClick={logout}

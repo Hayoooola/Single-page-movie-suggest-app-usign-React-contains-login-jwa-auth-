@@ -9,7 +9,7 @@ import { LoginPage } from './pages/login-page/login';
 import { SignUP } from './pages/sign-up/singUp';
 import { Page404 } from './pages/404/404';
 import { Page403 } from './pages/403/403';
-import { checkLoginStatus } from './store/features/auth-features/checkLoginStatus';
+import { checkLoginStatus } from './features/auth-features/checkLoginStatus';
 import Loading from './components/loading/loading';
 import NavBar from './components/navbar/navbar';
 

@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { useDispatch } from 'react-redux';
 import Button from '@mui/material/Button';
 import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
@@ -11,11 +10,11 @@ import Fab from '@mui/material/Fab';
 import { useTheme } from '@mui/material/styles';
 import Rating from '@mui/material/Rating';
 
-import { rateMovieRequest } from '../../../store/features/movie-features/rateSelectedMovie';
+import { useRateMovieMutation } from '../../../API/movieApi';
 import findRatingByUserName from "./findRatingByUserName";
 
 export default function RateComponent({ movieObj }) {
-    const dispatch = useDispatch();
+    const [rateMovie] = useRateMovieMutation();
 
     const [open, setOpen] = React.useState(false);
     const theme = useTheme();
@@ -35,7 +34,7 @@ export default function RateComponent({ movieObj }) {
 
     const submitRating = () => {
         handleClose();
-        dispatch(rateMovieRequest({ movieObj, value }));
+        rateMovie({ movieObj, value });
     };
 
     return (

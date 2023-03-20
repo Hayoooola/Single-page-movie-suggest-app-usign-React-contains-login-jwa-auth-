@@ -156,12 +156,12 @@
       "Poster": "https://m.media-amazon.com/images/M/MV5BMTU2NjA1ODgzMF5BMl5BanBnXkFtZTgwMTM2MTI4MjE@._V1_SX300.jpg",
       "votes": [
         {
-          "userName": "arta_aria@gmail.com",
-          "vote": 5
-        },
-        {
           "userName": "hayoooola@gmail.com",
           "vote": 1
+        },
+        {
+          "userName": "arta_aria@gmail.com",
+          "vote": 4
         }
       ],
       "summery": "sunt aut quae laboriosam sit ut impedit\nadipisci harum laborum totam deleniti voluptas odit rem ea\nnon iure distinctio ut velit doloribus\net non ex"

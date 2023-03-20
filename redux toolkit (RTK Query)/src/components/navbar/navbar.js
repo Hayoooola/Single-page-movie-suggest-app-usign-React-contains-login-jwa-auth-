@@ -11,8 +11,9 @@ import Avatar from '@mui/material/Avatar';
 import Logo from "../../assets/images/hayoola-logo.png";
 
 import styles from "./navbar.module.css";
-import { logOutRequest } from '../../store/features/auth-features/logOut';
-import { checkLoginStatus } from '../../store/features/auth-features/checkLoginStatus';
+import { logOutRequest } from '../../features/auth-features/logOut';
+import { checkLoginStatus } from '../../features/auth-features/checkLoginStatus';
+import { visitAlready } from '../../features/auth-features/isUserFirstTimeVisitPage';
 
 export default function NavBar() {
     const [anchorEl, setAnchorEl] = React.useState(null);
@@ -29,10 +30,11 @@ export default function NavBar() {
         closeUserMenu();
         logOutRequest();
         dispatch(checkLoginStatus());
+        dispatch(visitAlready());
     };
 
-    const userName = JSON.parse(localStorage.getItem("email"));
-    const userAvatar = userName.slice(0, 1);
+    const userName = JSON.parse(localStorage.getItem("email")) || null;
+    const userAvatar = userName ? userName.slice(0, 1) : null;
 
     return (
         <AppBar position="static">

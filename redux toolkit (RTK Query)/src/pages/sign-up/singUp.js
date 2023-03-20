@@ -4,17 +4,17 @@ import TextField from '@mui/material/TextField';
 import { Link, useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 
-import { signUpRequest } from "../../store/features/auth-features/signUpRequest";
+import { useSignUpRequestMutation } from "../../API/authApi";
 import { SubmitButton } from '../../components/submitButton';
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import { LoggedInUsers } from "../../components/content-to-logged-in-users/loginContent";
 import Loading from "../../components/loading/loading";
+import checkLoginStatus from "../../features/auth-features/checkLoginStatus";
 
 
 export const SignUP = () => {
-    const dispatch = useDispatch();
+    const [signUpRequest, { data, isError, error }] = useSignUpRequestMutation();
     const navigate = useNavigate();
-    const signUpData = useSelector(store => store.signUpData);
     const loginStatus = useSelector(store => store.loginStatus);
     const [isUserLogin, setIsUserLogin] = useState(false);
     const [loading, setLoading] = useState(true);
@@ -27,10 +27,8 @@ export const SignUP = () => {
         setLoading(false);
     }, [loginStatus]);
 
-
-    // checking signUp status
     useEffect(() => {
-        if (signUpData.authData.access_token) {
+        if (data) {
             toast.success('SignUp successful', {
                 position: "top-center",
                 autoClose: 3000,
@@ -42,11 +40,8 @@ export const SignUP = () => {
                 theme: "light",
             });
             navigate("/login");
-        }
-
-        // showing toast alerts
-        if (signUpData.error) {
-            toast.error(signUpData.error, {
+        } else if (isError) {
+            toast.error(error.data.message, {
                 position: "top-center",
                 autoClose: 5000,
                 hideProgressBar: false,
@@ -57,8 +52,7 @@ export const SignUP = () => {
                 theme: "light",
             });
         }
-    }, [signUpData]);
-
+    }, [data, isError]);
 
     // needs for manage input Errors
     const [firstNameError, setFirstNameError] = useState(false);
@@ -122,7 +116,7 @@ export const SignUP = () => {
             const lastName = values.lastName;
             const email = values.email;
             const password = values.password;
-            dispatch(signUpRequest({ firstName, lastName, email, password }));
+            signUpRequest({ firstName, lastName, email, password });
         }
     });
 

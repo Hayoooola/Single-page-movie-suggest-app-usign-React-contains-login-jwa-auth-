@@ -4,34 +4,36 @@ import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link, useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
+import jwtDecode from 'jwt-decode';
 import "./login.css";
 
-import { loginRequest } from '../../store/features/auth-features/loginRequest';
-import { visitPage } from '../../store/features/auth-features/isUserFirstTimeVisitPage';
+import { useLoginRequestMutation } from '../../API/authApi';
+import { checkLoginStatus } from '../../features/auth-features/checkLoginStatus';
+import { visitAlready } from '../../features/auth-features/isUserFirstTimeVisitPage';
 import { SubmitButton } from '../../components/submitButton';
-import Loading from "../../components/loading/loading";
 import logo from "../../assets/images/hayoola-logo.png";
 import { LoggedInUsers } from '../../components/content-to-logged-in-users/loginContent';
 
 export const LoginPage = () => {
+    const [loginRequest, { data, isLoading, isError, error }] = useLoginRequestMutation();
+
     const dispatch = useDispatch();
     const navigate = useNavigate();
-    const loginData = useSelector(store => store.loginData);
-    const [isUserLogin, setIsUserLogin] = useState(false);
-    const submitBtnLoading = useSelector(store => store.loginData.loading);
-    const loginStatus = useSelector(store => store.loginStatus);
-    const isUserLoginBefore = useSelector(store => store.firesTimeVisit.isUserFirstTimeVisit);
-    const loading = useSelector(store => store.loginStatus.loading);
 
-    // check login status
-    useEffect(() => {
-        loginStatus.isUserLogin ? setIsUserLogin(true) : setIsUserLogin(false);
-    }, [loginStatus]);
+    const { isFirstTImeVisit } = useSelector(store => store.firesTimeVisit);
+    const isUserLogin = useSelector(store => store.loginStatus.isUserLogin);
 
-    // manage submitting login requests
+    // update login data
     useEffect(() => {
-        if (loginData.authData.access_token && !isUserLoginBefore) {
-            dispatch(visitPage());
+        if (data) {
+            putLoginInformationToLocalStorage(data.access_token);
+            dispatch(checkLoginStatus());
+        }
+    }, [data]);
+
+    // manage toasts & errors
+    useEffect(() => {
+        if (isUserLogin && isFirstTImeVisit) {
             navigate("/");
             // showing success toast
             toast.success('Login successful', {
@@ -44,13 +46,13 @@ export const LoginPage = () => {
                 progress: undefined,
                 theme: "light",
             });
+            // dispatching this action will prevent users redirecting to home page after login
+            dispatch(visitAlready());
         }
         // showing toast errors
-        if (loginData.error) {
-            const errorMessage = loginData.error;
-
+        if (isError) {
             const error401 = /401/g;
-            if (error401.test(errorMessage)) {
+            if (error401.test(error.data.message)) {
                 toast.error("Incorrect Username or Password!", {
                     position: "top-center",
                     autoClose: 5000,
@@ -62,7 +64,7 @@ export const LoginPage = () => {
                     theme: "light",
                 });
             } else {
-                toast.error(loginData.error, {
+                toast.error(error.data.message, {
                     position: "top-center",
                     autoClose: 5000,
                     hideProgressBar: false,
@@ -76,7 +78,7 @@ export const LoginPage = () => {
 
 
         }
-    }, [loginData, isUserLoginBefore]);
+    }, [isFirstTImeVisit, isUserLogin, isError, data]);
 
     // needs for manage input Errors
     const [usernameError, setUsernameError] = useState(false);
@@ -109,7 +111,7 @@ export const LoginPage = () => {
         onSubmit: values => {
             const userName = values.username;
             const password = values.password;
-            dispatch(loginRequest({ userName, password }));
+            loginRequest({ userName, password });
         }
     });
 
@@ -143,13 +145,7 @@ export const LoginPage = () => {
     };
 
     const itemsToShow = () => {
-        if (loading) {
-            return (
-                <Loading />
-            );
-
-            // showing items to logged in users
-        } else if (isUserLogin) {
+        if (isUserLogin) {
             return <LoggedInUsers />;
 
             // showing items to UnAuthorized users
@@ -200,7 +196,7 @@ export const LoginPage = () => {
                                                     </div>
                                                     <div className="text-center pt-1 mb-5 pb-1 w-100">
                                                         <SubmitButton
-                                                            loading={submitBtnLoading}
+                                                            loading={isLoading}
                                                             customClassName="btn-outline-none gradient-custom-2 w-100"
                                                             buttonText="Login"
                                                             onClick={toastInputErrors}
@@ -245,4 +241,15 @@ export const LoginPage = () => {
     return (
         itemsToShow()
     );
+};
+
+// putting data in localStorage
+const putLoginInformationToLocalStorage = (token) => {
+    localStorage.setItem("token", JSON.stringify(token));
+
+    const decodedToken = jwtDecode(token);
+
+    localStorage.setItem("email", JSON.stringify(decodedToken.email));
+    localStorage.setItem("iat", JSON.stringify(decodedToken.iat));
+    localStorage.setItem("exp", JSON.stringify(decodedToken.exp));
 };

@@ -1,5 +1,4 @@
-import React, { useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
@@ -12,35 +11,44 @@ import Rating from '@mui/material/Rating';
 import styles from "./movie.module.css";
 
 
-import { fetchSelectedMovieRequest } from "../../store/features/movie-features/fetch-selected-movie";
+import { useFetchSelectedMovieQuery } from "../../API/movieApi";
 import Loading from "../../components/loading/loading";
 import { findRating } from "../../components/movie-action-components/rate-component/findRating";
 import BreadCrumb from "../../components/breadcrumb/breadcrumb";
 import findRatingByUserName from "../../components/movie-action-components/rate-component/findRatingByUserName";
 
 export const Movie = () => {
-    const dispatch = useDispatch();
-
     const { movieId } = useParams();
-    const loading = useSelector((store) => store.selectedMovie.loading);
-    const movieObj = useSelector((store) => store.selectedMovie.movieObj);
-    const creatorName = useSelector((store) => store.selectedMovie.movieObj.userName);
+
+    const { data, isLoading } = useFetchSelectedMovieQuery({ movieId });
+
+    const [loading, setLoading] = useState(true);
+    const [movieObj, setMovieObj] = useState({});
+    const [creatorName, setCreatorName] = useState("");
+
+    // ratings
+    const [movieRating, setMovieRating] = useState(3);
+    const [votesCount, setVotesCount] = useState(1);
+    const [creatorRating, setCreatorRating] = useState(3);
 
     useEffect(() => {
-        dispatch(fetchSelectedMovieRequest({ movieId }));
-    }, []);
+        setLoading(isLoading);
+        setMovieObj(data);
+
+        // find ratings
+        if (data) {
+            setMovieRating(findRating(data)[0]);
+            setVotesCount(findRating(data)[1]);
+            setCreatorName(data.userName);
+            setCreatorRating(findRatingByUserName(data, data.userName));
+        }
+    }, [data, isLoading]);
 
     // user avatar
     const findUserAvatar = () => {
         return creatorName ? creatorName.slice(0, 1).toUpperCase() : null;
     };
     const userAvatar = findUserAvatar();
-
-    // movie rating
-    const [movieRating, votesCount] = findRating(movieObj);
-
-    // creator rating
-    const creatorRating = findRatingByUserName(movieObj, creatorName);
 
     const itemsToShow = () => {
         if (loading) {
@@ -58,7 +66,7 @@ export const Movie = () => {
                                     <h1 className="h1 text-primary mb-4">{movieObj.Title}</h1>
                                     <div className="d-flex align-items-center" style={{ minWidth: "200px" }}>
                                         <span className="fw-light text-muted px-2">{`(${votesCount} Votes)`}</span>
-                                        <Rating name="half-rating-read" defaultValue={movieRating} precision={0.5} readOnly />
+                                        <Rating name="half-rating-read" value={movieRating} precision={0.5} readOnly />
                                     </div>
                                 </div>
                                 <div className={styles.creator}>
@@ -71,7 +79,7 @@ export const Movie = () => {
                                             <ListItemText
                                                 primary={movieObj.userName}
                                                 secondary={
-                                                    <Rating name="half-rating-read" defaultValue={creatorRating} precision={0.5} readOnly />
+                                                    <Rating name="half-rating-read" value={creatorRating} precision={0.5} readOnly />
                                                 }
                                             />
                                         </ListItem>

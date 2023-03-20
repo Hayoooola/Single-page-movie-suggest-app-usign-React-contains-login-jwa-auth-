@@ -9,8 +9,7 @@ import Slide from '@mui/material/Slide';
 import Fab from '@mui/material/Fab';
 import DeleteIcon from '@mui/icons-material/Delete';
 
-import { deleteMovieRequest } from '../../store/features/movie-features/delete-movie';
-import { useDispatch } from 'react-redux';
+import { useDeleteMovieMutation } from '../../API/movieApi';
 
 const Transition = React.forwardRef(function Transition(props, ref) {
     return <Slide direction="up" ref={ref} {...props} />;
@@ -18,7 +17,8 @@ const Transition = React.forwardRef(function Transition(props, ref) {
 
 export default function DeleteDialog({ movieId, movieName }) {
     const [open, setOpen] = React.useState(false);
-    const dispatch = useDispatch();
+
+    const [deleteMovie] = useDeleteMovieMutation();
 
     const handleClickOpen = () => {
         setOpen(true);
@@ -30,7 +30,7 @@ export default function DeleteDialog({ movieId, movieName }) {
 
     const submit = () => {
         setOpen(false);
-        dispatch(deleteMovieRequest({ movieId }));
+        deleteMovie({ movieId });
     };
 
 

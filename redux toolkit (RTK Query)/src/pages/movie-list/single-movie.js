@@ -12,10 +12,11 @@ import { findRating } from "../../components/movie-action-components/rate-compon
 import DeleteComponent from '../../components/movie-action-components/delete';
 import MovieDetail from '../../components/movie-action-components/movie-detail';
 import EditComponent from '../../components/movie-action-components/edit';
+import { useEffect, useState } from 'react';
 
 export const SingleMovie = ({ movieObj }) => {
     // calculate movie rating
-    const [rating, votesCount] = findRating(movieObj);
+    let [rating, votesCount] = findRating(movieObj);
 
     // user avatar
     const findUserAvatar = () => {
@@ -50,7 +51,7 @@ export const SingleMovie = ({ movieObj }) => {
                                     primary={movieObj.Title}
                                 />
                                 <div className='d-flex align-items-center'>
-                                    <Rating name="half-rating-read" defaultValue={rating} precision={0.5} readOnly />
+                                    <Rating name="half-rating-read" value={rating} precision={0.5} readOnly />
                                     <span className='text-muted mx-2'>{`(${votesCount} votes)`}</span>
                                 </div>
                             </div>
@@ -93,7 +94,7 @@ export const SingleMovie = ({ movieObj }) => {
                                     primary={movieObj.Title}
                                 />
                                 <div className='d-flex align-items-center'>
-                                    <Rating name="half-rating-read" defaultValue={rating} precision={0.5} readOnly />
+                                    <Rating name="half-rating-read" value={rating} precision={0.5} readOnly />
                                     <span className='text-muted mx-2'>{`(${votesCount} votes)`}</span>
                                 </div>
                             </div>

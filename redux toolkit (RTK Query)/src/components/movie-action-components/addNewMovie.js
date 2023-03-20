@@ -1,14 +1,13 @@
 import * as React from 'react';
-import { useDispatch } from 'react-redux';
 import Fab from '@mui/material/Fab';
 import AddIcon from '@mui/icons-material/Add';
 
 import MovieModal from './modal-form/movieInputs';
-import { addNewMovieRequest } from '../../store/features/movie-features/add-new-movie';
+import { useAddNewMovieMutation } from '../../API/movieApi';
 
 const AddNewMovieButton = () => {
     const [open, setOpen] = React.useState(false);
-    const dispatch = useDispatch();
+    const [addNewMovie] = useAddNewMovieMutation();
 
     const openHandler = () => {
         setOpen(true);
@@ -19,7 +18,7 @@ const AddNewMovieButton = () => {
     };
 
     const submitHandler = (title, summery, rating, year, url) => {
-        dispatch(addNewMovieRequest({ title, summery, rating, year, url }));
+        addNewMovie({ title, summery, rating, year, url });
         closeHandler();
     };
 
